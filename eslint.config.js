@@ -37,6 +37,7 @@ export default [
     rules: {
       // ✅ React + Hooks
       'react/react-in-jsx-scope': 'off', // React 17+ no requiere import React
+      'react/jsx-uses-vars': 'error', // evita falsos positivos de no-unused-vars en JSX
       'react/prop-types': 'off', // si no usas PropTypes (muchos ya no lo usan)
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
