@@ -10,6 +10,10 @@ export default [
   js.configs.recommended,
 
   {
+    ignores: ['dist/**', '.vite/**', 'node_modules/**'],
+  },
+
+  {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 'latest',

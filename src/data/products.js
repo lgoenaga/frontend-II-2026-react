@@ -1,3 +1,5 @@
+import webcamLogitechC920Image from '../assets/img-products/webcam-logitech-c920.jpg';
+
 export const products = [
   {
     id: 1,
@@ -45,7 +47,7 @@ export const products = [
     name: 'Webcam Logitech C920',
     category: 'Accesorios',
     price: 79990,
-    image: 'https://images.unsplash.com/photo-1589588227157-56ce53ea3920?w=400',
+    image: webcamLogitechC920Image,
     description: 'Webcam Full HD 1080p ideal para videollamadas y streaming',
   },
 ];
