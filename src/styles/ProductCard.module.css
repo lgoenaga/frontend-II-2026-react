@@ -85,3 +85,12 @@
 .btnLike:active {
   transform: scale(0.95);
 }
+
+.btnLike.liked {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btnLike.liked:hover {
+  background: #fecaca;
+}
