@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import styles from '../styles/ProductCard.module.css';
+import { formatCOP } from '../utils/formatCOP';
 
 function ProductCard({ name, category, price, image, description }) {
   const [likes, setLikes] = useState(0);
@@ -24,7 +25,7 @@ function ProductCard({ name, category, price, image, description }) {
         <h3 className={styles.productName}>{name}</h3>
         <p className={styles.productDescription}>{description}</p>
         <div className={styles.productFooter}>
-          <span className={styles.productPrice}>${price.toFixed(2)}</span>
+          <span className={styles.productPrice}>{formatCOP(price)}</span>
           <button
             className={`${styles.btnLike} ${isLiked ? styles.liked : ''}`}
             onClick={handleLike}
