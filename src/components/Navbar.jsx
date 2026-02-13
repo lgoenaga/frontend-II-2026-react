@@ -1,4 +1,4 @@
-import logo from '../assets/react.svg';
+import logo from '../assets/img-logos/logo-Cesde-2023.svg';
 import styles from '../styles/Navbar.module.css';
 
 function Navbar({ activePage, onNavigate, user, onSignIn, onSignOut }) {
