@@ -27,13 +27,15 @@ function ProductList() {
 
       return [...prev, { ...product, id: nextId }];
     });
+
+    handleCloseForm();
   };
 
   const handleDeleteProduct = (id) => {
     setProductsState((prev) => prev.filter((product) => product.id !== id));
 
     if (editingProduct?.id === id) {
-      setEditingProduct(null);
+      handleCloseForm();
     }
   };
 
@@ -46,7 +48,7 @@ function ProductList() {
     setProductsState((prev) =>
       prev.map((product) => (product.id === updatedProduct.id ? updatedProduct : product))
     );
-    setEditingProduct(null);
+    handleCloseForm();
   };
 
   return (
