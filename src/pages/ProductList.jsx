@@ -6,7 +6,16 @@ import { products } from '../data/products';
 import styles from '../styles/ProductList.module.css';
 
 function ProductList() {
-  const [productsState] = useState(products);
+  const [productsState, setProductsState] = useState(products);
+
+  const handleAddProduct = (product) => {
+    setProductsState((prev) => {
+      const maxId = prev.reduce((acc, item) => Math.max(acc, item.id), 0);
+      const nextId = maxId + 1;
+
+      return [...prev, { ...product, id: nextId }];
+    });
+  };
 
   return (
     <div className={styles.container}>
@@ -17,7 +26,7 @@ function ProductList() {
         </p>
       </header>
 
-      <ProductForm onSubmit={() => {}} />
+      <ProductForm onSubmit={handleAddProduct} />
 
       <div className={styles.grid}>
         {productsState.map((product) => (
