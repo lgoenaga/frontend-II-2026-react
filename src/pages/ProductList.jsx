@@ -8,6 +8,17 @@ import styles from '../styles/ProductList.module.css';
 function ProductList() {
   const [productsState, setProductsState] = useState(products);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const handleOpenCreate = () => {
+    setEditingProduct(null);
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setEditingProduct(null);
+    setIsFormOpen(false);
+  };
 
   const handleAddProduct = (product) => {
     setProductsState((prev) => {
@@ -28,10 +39,7 @@ function ProductList() {
 
   const handleEditStart = (product) => {
     setEditingProduct(product);
-  };
-
-  const handleEditCancel = () => {
-    setEditingProduct(null);
+    setIsFormOpen(true);
   };
 
   const handleEditSubmit = (updatedProduct) => {
@@ -50,28 +58,38 @@ function ProductList() {
         </p>
       </header>
 
-      <ProductForm
-        initialValues={editingProduct}
-        isEditing={Boolean(editingProduct)}
-        onCancel={handleEditCancel}
-        onSubmit={editingProduct ? handleEditSubmit : handleAddProduct}
-      />
+      {isFormOpen ? (
+        <ProductForm
+          initialValues={editingProduct}
+          isEditing={Boolean(editingProduct)}
+          onCancel={handleCloseForm}
+          onSubmit={editingProduct ? handleEditSubmit : handleAddProduct}
+        />
+      ) : (
+        <>
+          <div className={styles.toolbar}>
+            <button className={styles.btnAdd} type="button" onClick={handleOpenCreate}>
+              Agregar producto
+            </button>
+          </div>
 
-      <div className={styles.grid}>
-        {productsState.map((product) => (
-          <ProductCard
-            key={product.id}
-            name={product.name}
-            category={product.category}
-            price={product.price}
-            stock={product.stock}
-            image={product.image}
-            description={product.description}
-            onDelete={() => handleDeleteProduct(product.id)}
-            onEdit={() => handleEditStart(product)}
-          />
-        ))}
-      </div>
+          <div className={styles.grid}>
+            {productsState.map((product) => (
+              <ProductCard
+                key={product.id}
+                name={product.name}
+                category={product.category}
+                price={product.price}
+                stock={product.stock}
+                image={product.image}
+                description={product.description}
+                onDelete={() => handleDeleteProduct(product.id)}
+                onEdit={() => handleEditStart(product)}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

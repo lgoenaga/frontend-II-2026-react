@@ -146,7 +146,7 @@ function ProductForm({ initialValues, onSubmit, onCancel, isEditing = false }) {
         </label>
 
         <div className={styles.actions}>
-          {isEditing && onCancel ? (
+          {onCancel ? (
             <button className={styles.btnSecondary} type="button" onClick={onCancel}>
               Cancelar
             </button>
