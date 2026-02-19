@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import ProductCard from '../components/ProductCard';
+import ProductForm from '../components/ProductForm';
 import { products } from '../data/products';
 import styles from '../styles/ProductList.module.css';
 
@@ -15,6 +16,8 @@ function ProductList() {
           Encuentra los mejores productos de tecnología para tu setup
         </p>
       </header>
+
+      <ProductForm onSubmit={() => {}} />
 
       <div className={styles.grid}>
         {productsState.map((product) => (
