@@ -58,6 +58,10 @@ function ProductForm({ initialValues, onSubmit, onCancel, isEditing = false }) {
       image,
       description,
     });
+
+    if (!isEditing) {
+      setValues(emptyValues);
+    }
   };
 
   return (

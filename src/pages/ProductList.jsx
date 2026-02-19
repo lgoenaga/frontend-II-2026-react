@@ -7,6 +7,7 @@ import styles from '../styles/ProductList.module.css';
 
 function ProductList() {
   const [productsState, setProductsState] = useState(products);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   const handleAddProduct = (product) => {
     setProductsState((prev) => {
@@ -19,6 +20,25 @@ function ProductList() {
 
   const handleDeleteProduct = (id) => {
     setProductsState((prev) => prev.filter((product) => product.id !== id));
+
+    if (editingProduct?.id === id) {
+      setEditingProduct(null);
+    }
+  };
+
+  const handleEditStart = (product) => {
+    setEditingProduct(product);
+  };
+
+  const handleEditCancel = () => {
+    setEditingProduct(null);
+  };
+
+  const handleEditSubmit = (updatedProduct) => {
+    setProductsState((prev) =>
+      prev.map((product) => (product.id === updatedProduct.id ? updatedProduct : product))
+    );
+    setEditingProduct(null);
   };
 
   return (
@@ -30,7 +50,12 @@ function ProductList() {
         </p>
       </header>
 
-      <ProductForm onSubmit={handleAddProduct} />
+      <ProductForm
+        initialValues={editingProduct}
+        isEditing={Boolean(editingProduct)}
+        onCancel={handleEditCancel}
+        onSubmit={editingProduct ? handleEditSubmit : handleAddProduct}
+      />
 
       <div className={styles.grid}>
         {productsState.map((product) => (
@@ -43,6 +68,7 @@ function ProductList() {
             image={product.image}
             description={product.description}
             onDelete={() => handleDeleteProduct(product.id)}
+            onEdit={() => handleEditStart(product)}
           />
         ))}
       </div>
