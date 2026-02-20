@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import ProductCard from '../components/ProductCard';
 import ProductForm from '../components/ProductForm';
@@ -27,6 +27,18 @@ function ProductList() {
   });
   const [editingProduct, setEditingProduct] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(productsState));
+    } catch (error) {
+      void error;
+    }
+  }, [productsState]);
 
   const handleOpenCreate = () => {
     setEditingProduct(null);
