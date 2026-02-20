@@ -5,8 +5,26 @@ import ProductForm from '../components/ProductForm';
 import { products } from '../data/products';
 import styles from '../styles/ProductList.module.css';
 
+const STORAGE_KEY = 'products';
+
 function ProductList() {
-  const [productsState, setProductsState] = useState(products);
+  const [productsState, setProductsState] = useState(() => {
+    if (typeof window === 'undefined') {
+      return products;
+    }
+
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (!stored) {
+      return products;
+    }
+
+    try {
+      const parsed = JSON.parse(stored);
+      return Array.isArray(parsed) ? parsed : products;
+    } catch {
+      return products;
+    }
+  });
   const [editingProduct, setEditingProduct] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
