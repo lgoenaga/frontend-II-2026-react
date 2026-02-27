@@ -6,6 +6,23 @@ import { products } from '../data/products';
 import styles from '../styles/ProductList.module.css';
 
 const STORAGE_KEY = 'products';
+const DEFAULT_RATING = 3;
+
+const seedById = new Map(products.map((product) => [product.id, product]));
+
+const normalizeProduct = (product) => {
+  const seedProduct = seedById.get(product?.id);
+  const parsedRating = Number(product?.rating ?? seedProduct?.rating ?? DEFAULT_RATING);
+  const rating = Number.isFinite(parsedRating)
+    ? Math.min(5, Math.max(1, parsedRating))
+    : DEFAULT_RATING;
+
+  return {
+    ...seedProduct,
+    ...product,
+    rating,
+  };
+};
 
 function ProductList() {
   const [productsState, setProductsState] = useState(() => {
@@ -20,7 +37,7 @@ function ProductList() {
 
     try {
       const parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed : products;
+      return Array.isArray(parsed) ? parsed.map(normalizeProduct) : products;
     } catch {
       return products;
     }
