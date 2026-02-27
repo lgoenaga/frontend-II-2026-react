@@ -129,6 +129,7 @@ function ProductList() {
                 name={product.name}
                 category={product.category}
                 price={product.price}
+                rating={product.rating}
                 stock={product.stock}
                 image={product.image}
                 description={product.description}
