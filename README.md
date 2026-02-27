@@ -23,23 +23,23 @@ Proyecto didáctico para practicar React (componentes, props, estado, formulario
 ## Estructura principal
 
 src/
-	components/
-		Header.jsx
-		Navbar.jsx
-		Footer.jsx
-		ProductCard.jsx
-		ProductForm.jsx
-		ProductDetailsModal.jsx
-	pages/
-		Home.jsx
-		ProductList.jsx
-		Cart.jsx
-	data/
-		products.js
-	styles/
-		*.module.css
-	utils/
-		formatCOP.js
+components/
+Header.jsx
+Navbar.jsx
+Footer.jsx
+ProductCard.jsx
+ProductForm.jsx
+ProductDetailsModal.jsx
+pages/
+Home.jsx
+ProductList.jsx
+Cart.jsx
+data/
+products.js
+styles/
+\*.module.css
+utils/
+formatCOP.js
 
 ## Navegación (sin router)
 
@@ -48,6 +48,7 @@ La app no usa react-router-dom todavía. En su lugar, se navega por estado local
 - home: Inicio
 - products: Productos (CRUD)
 - cart: Carrito
+- category: Productos por categoría
 
 ## Funcionalidades por pantalla
 
@@ -55,10 +56,17 @@ La app no usa react-router-dom todavía. En su lugar, se navega por estado local
 
 En src/pages/Home.jsx:
 
-- Grilla de productos agrupada por category.
-- Categorías ordenadas alfabéticamente.
-- Productos ordenados por rating (desc) dentro de cada categoría.
-- Botón "Más información" que abre un modal con el detalle.
+- Una sola grilla de categorías.
+- Cada categoría muestra solo la imagen del producto destacado (mejor rating; en empate se conserva el primero).
+- Al hacer clic en una categoría, navega a la página de productos de esa categoría.
+
+### Categoría
+
+En src/pages/CategoryProducts.jsx:
+
+- Lista los productos de la categoría seleccionada.
+- Permite filtrar por nombre (input de búsqueda).
+- Botón "Más información" abre un modal con el detalle del producto.
 
 ### Productos (CRUD en memoria + persistencia)
 
