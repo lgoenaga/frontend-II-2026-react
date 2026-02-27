@@ -1,0 +1,46 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.categorySection {
+  margin: 2rem 0;
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.categoryTitle {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: white;
+}
+
+.categoryCount {
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+}
