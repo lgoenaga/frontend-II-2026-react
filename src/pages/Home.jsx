@@ -2,50 +2,15 @@ import { useMemo, useState } from 'react';
 
 import ProductCard from '../components/ProductCard';
 import ProductDetailsModal from '../components/ProductDetailsModal';
-import { products } from '../data/products';
 import homeStyles from '../styles/Home.module.css';
 import productListStyles from '../styles/ProductList.module.css';
-
-const STORAGE_KEY = 'products';
-const DEFAULT_RATING = 3;
-
-const seedById = new Map(products.map((product) => [product.id, product]));
-
-const normalizeProduct = (product) => {
-  const seedProduct = seedById.get(product?.id);
-  const parsedRating = Number(product?.rating ?? seedProduct?.rating ?? DEFAULT_RATING);
-  const rating = Number.isFinite(parsedRating)
-    ? Math.min(5, Math.max(1, parsedRating))
-    : DEFAULT_RATING;
-
-  return {
-    ...seedProduct,
-    ...product,
-    rating,
-  };
-};
+import { loadProducts } from '../utils/productsStorage';
 
 function Home() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [productsState] = useState(() => {
-    if (typeof window === 'undefined') {
-      return products;
-    }
-
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-      return products;
-    }
-
-    try {
-      const parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed.map(normalizeProduct) : products;
-    } catch {
-      return products;
-    }
-  });
+  const [productsState] = useState(loadProducts);
 
   const categories = useMemo(() => {
     const categoryMap = new Map();
@@ -88,7 +53,9 @@ function Home() {
     <div className={homeStyles.container}>
       <header className={homeStyles.header}>
         <h1 className={homeStyles.title}>Inicio</h1>
-        <p className={homeStyles.subtitle}>Explora productos por categoría, ordenados por calificación</p>
+        <p className={homeStyles.subtitle}>
+          Explora productos por categoría, ordenados por calificación
+        </p>
       </header>
 
       {categories.map(({ category, products: categoryProducts }) => (

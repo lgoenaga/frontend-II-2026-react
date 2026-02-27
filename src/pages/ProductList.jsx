@@ -2,46 +2,13 @@ import { useEffect, useState } from 'react';
 
 import ProductCard from '../components/ProductCard';
 import ProductForm from '../components/ProductForm';
-import { products } from '../data/products';
 import styles from '../styles/ProductList.module.css';
+import { loadProducts, PRODUCTS_STORAGE_KEY } from '../utils/productsStorage';
 
-const STORAGE_KEY = 'products';
-const DEFAULT_RATING = 3;
-
-const seedById = new Map(products.map((product) => [product.id, product]));
-
-const normalizeProduct = (product) => {
-  const seedProduct = seedById.get(product?.id);
-  const parsedRating = Number(product?.rating ?? seedProduct?.rating ?? DEFAULT_RATING);
-  const rating = Number.isFinite(parsedRating)
-    ? Math.min(5, Math.max(1, parsedRating))
-    : DEFAULT_RATING;
-
-  return {
-    ...seedProduct,
-    ...product,
-    rating,
-  };
-};
+const STORAGE_KEY = PRODUCTS_STORAGE_KEY;
 
 function ProductList() {
-  const [productsState, setProductsState] = useState(() => {
-    if (typeof window === 'undefined') {
-      return products;
-    }
-
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-      return products;
-    }
-
-    try {
-      const parsed = JSON.parse(stored);
-      return Array.isArray(parsed) ? parsed.map(normalizeProduct) : products;
-    } catch {
-      return products;
-    }
-  });
+  const [productsState, setProductsState] = useState(loadProducts);
   const [editingProduct, setEditingProduct] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
