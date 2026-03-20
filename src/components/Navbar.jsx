@@ -1,9 +1,20 @@
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import logo from '../assets/img-logos/logo-Cesde-2023.svg';
 import styles from '../styles/Navbar.module.css';
 
-function Navbar({ activePage, onNavigate, user, onSignIn, onSignOut, cartItemCount = 0 }) {
+function Navbar({ user, onSignIn, onSignOut, cartItemCount = 0 }) {
   const userLabel = user?.name ?? 'Invitado';
   const isLoggedIn = Boolean(user);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isHomeActive = location.pathname === '/' || location.pathname.startsWith('/category/');
+  const isProductsActive = location.pathname === '/products';
+  const isCartActive =
+    location.pathname === '/cart' ||
+    location.pathname === '/checkout' ||
+    location.pathname === '/order-confirmation';
 
   return (
     <nav className={styles.navbar}>
@@ -15,22 +26,22 @@ function Navbar({ activePage, onNavigate, user, onSignIn, onSignOut, cartItemCou
       <div className={styles.links}>
         <button
           type="button"
-          className={`${styles.link} ${activePage === 'home' ? styles.active : ''}`}
-          onClick={() => onNavigate('home')}
+          className={`${styles.link} ${isHomeActive ? styles.active : ''}`}
+          onClick={() => navigate('/')}
         >
           Inicio
         </button>
         <button
           type="button"
-          className={`${styles.link} ${activePage === 'products' ? styles.active : ''}`}
-          onClick={() => onNavigate('products')}
+          className={`${styles.link} ${isProductsActive ? styles.active : ''}`}
+          onClick={() => navigate('/products')}
         >
           Productos
         </button>
         <button
           type="button"
-          className={`${styles.link} ${activePage === 'cart' ? styles.active : ''}`}
-          onClick={() => onNavigate('cart')}
+          className={`${styles.link} ${isCartActive ? styles.active : ''}`}
+          onClick={() => navigate('/cart')}
         >
           Carrito
           {cartItemCount > 0 ? <span className={styles.cartBadge}>{cartItemCount}</span> : null}
