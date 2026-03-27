@@ -1,0 +1,292 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2rem 0 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.title {
+  margin: 0;
+  color: white;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.subtitle {
+  margin: 0.5rem 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+  max-width: 52ch;
+}
+
+.headerActions,
+.layout,
+.accountColumn,
+.fieldGrid,
+.fieldGridSingle,
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.headerActions {
+  grid-auto-flow: column;
+}
+
+.layout {
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.9fr);
+}
+
+.accountColumn {
+  align-content: start;
+}
+
+.card,
+.statCard,
+.emptyState,
+.latestOrder {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(22, 30, 84, 0.16);
+}
+
+.card {
+  padding: 1.5rem;
+}
+
+.sectionTitle {
+  margin: 0 0 1rem;
+  color: var(--gray-900);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.sectionHeader,
+.sectionHeaderCompact {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.sectionHeader {
+  margin-bottom: 1rem;
+}
+
+.sectionHeaderCompact {
+  margin-bottom: 0.75rem;
+}
+
+.sectionText,
+.helper {
+  margin: 0;
+  color: var(--gray-500);
+  font-weight: 700;
+}
+
+.infoGrid,
+.statsGrid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.fieldGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fieldGridSingle {
+  grid-template-columns: 1fr;
+}
+
+.infoGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.statsGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.infoItem,
+.statCard {
+  padding: 1rem;
+  border-radius: 14px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+}
+
+.label {
+  display: block;
+  color: var(--gray-500);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.form {
+  margin-top: 0.25rem;
+}
+
+.input {
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 0.8rem 0.9rem;
+  outline: none;
+  color: var(--gray-900);
+}
+
+.input:focus {
+  border-color: var(--primary);
+}
+
+.input:disabled {
+  background: var(--gray-100);
+  cursor: not-allowed;
+}
+
+.error,
+.errorBanner,
+.successBanner {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.error,
+.errorBanner {
+  color: var(--danger);
+}
+
+.successBanner {
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: #ecfdf3;
+  color: #047857;
+}
+
+.errorBanner {
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: #fff1f2;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.infoItem strong,
+.statCard strong {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--gray-900);
+}
+
+.latestOrder,
+.emptyState {
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.latestOrderText,
+.emptyText {
+  margin: 0;
+  color: var(--gray-700);
+  font-weight: 700;
+}
+
+.primaryButton,
+.secondaryButton {
+  border: none;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryButton {
+  background: var(--primary);
+  color: white;
+}
+
+.primaryButton:hover {
+  background: var(--primary-dark);
+}
+
+.secondaryButton {
+  background: white;
+  color: var(--primary-dark);
+}
+
+.secondaryButton:hover {
+  background: var(--gray-100);
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+@media (max-width: 960px) {
+  .layout,
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .header,
+  .headerActions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .infoGrid,
+  .fieldGrid,
+  .sectionHeader,
+  .sectionHeaderCompact,
+  .formActions {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHeader,
+  .sectionHeaderCompact,
+  .formActions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}

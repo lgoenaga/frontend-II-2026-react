@@ -1,31 +1,234 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import AdminRoute from './components/AdminRoute';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import ProtectedRoute from './components/ProtectedRoute';
+import useAuth from './hooks/useAuth';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminProducts from './pages/AdminProducts';
+import Cart from './pages/Cart';
+import CategoryProducts from './pages/CategoryProducts';
+import Checkout from './pages/Checkout';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import OrderConfirmation from './pages/OrderConfirmation';
+import OrderDetail from './pages/OrderDetail';
+import ProductList from './pages/ProductList';
+import Register from './pages/Register';
+import Unauthorized from './pages/Unauthorized';
+import UserOrders from './pages/UserOrders';
+import UserProfile from './pages/UserProfile';
+import orderService from './services/orderService';
+import {
+  calculateOrderTotals,
+  getPaymentMethodById,
+  getShippingOptionById,
+} from './utils/calculateOrderTotals';
+import { CART_STORAGE_KEY, loadCartItems } from './utils/cartStorage';
+
 import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const { currentUser } = useAuth();
+  const [cartItems, setCartItems] = useState(loadCartItems);
+  const [latestOrder, setLatestOrder] = useState(null);
+
+  useEffect(() => {
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const handleAddToCart = (product) => {
+    if (!product || !Number.isFinite(Number(product.id))) {
+      return;
+    }
+
+    setCartItems((currentItems) => {
+      const existingItem = currentItems.find((item) => item.id === product.id);
+      const stock =
+        Number.isFinite(Number(product.stock)) && Number(product.stock) > 0
+          ? Number(product.stock)
+          : 1;
+
+      if (!existingItem) {
+        return [
+          ...currentItems,
+          {
+            id: Number(product.id),
+            name: product.name,
+            category: product.category,
+            price: Number(product.price) || 0,
+            stock,
+            image: product.image,
+            quantity: 1,
+          },
+        ];
+      }
+
+      return currentItems.map((item) => {
+        if (item.id !== product.id) {
+          return item;
+        }
+
+        return {
+          ...item,
+          stock,
+          quantity: Math.min(item.quantity + 1, stock),
+        };
+      });
+    });
+  };
+
+  const handleUpdateCartItemQuantity = (productId, nextQuantity) => {
+    setCartItems((currentItems) =>
+      currentItems.flatMap((item) => {
+        if (item.id !== productId) {
+          return [item];
+        }
+
+        const stock =
+          Number.isFinite(Number(item.stock)) && Number(item.stock) > 0 ? Number(item.stock) : 1;
+        const normalizedQuantity = Math.max(
+          1,
+          Math.min(stock, Math.floor(Number(nextQuantity) || 1))
+        );
+
+        return normalizedQuantity > 0 ? [{ ...item, quantity: normalizedQuantity }] : [];
+      })
+    );
+  };
+
+  const handleRemoveCartItem = (productId) => {
+    setCartItems((currentItems) => currentItems.filter((item) => item.id !== productId));
+  };
+
+  const handleClearCart = () => {
+    setCartItems([]);
+  };
+
+  const handleCompleteCheckout = async ({ customer, shippingMethodId, paymentMethodId }) => {
+    if (cartItems.length === 0) {
+      return null;
+    }
+
+    const totals = calculateOrderTotals(cartItems, shippingMethodId);
+    const order = await orderService.createOrderAsync({
+      userId: currentUser?.id ?? '',
+      items: cartItems.map((item) => ({ ...item })),
+      customer,
+      shippingMethod: getShippingOptionById(shippingMethodId),
+      paymentMethod: getPaymentMethodById(paymentMethodId),
+      totals,
+    });
+
+    setLatestOrder(order);
+    setCartItems([]);
+    return order;
+  };
+
+  const handleBackHomeAfterOrder = () => {
+    setLatestOrder(null);
+  };
+
+  const cartItemCount = useMemo(
+    () => cartItems.reduce((total, item) => total + item.quantity, 0),
+    [cartItems]
+  );
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <div className="app">
+      <Header user={currentUser} cartItemCount={cartItemCount} />
+
+      <main className="main">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/category/:categoryName"
+            element={<CategoryProducts cartItems={cartItems} onAddToCart={handleAddToCart} />}
+          />
+          <Route
+            path="/products"
+            element={<ProductList cartItems={cartItems} onAddToCart={handleAddToCart} />}
+          />
+          <Route
+            path="/cart"
+            element={
+              <Cart
+                cartItems={cartItems}
+                onUpdateQuantity={handleUpdateCartItemQuantity}
+                onRemoveItem={handleRemoveCartItem}
+                onClearCart={handleClearCart}
+              />
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout
+                  cartItems={cartItems}
+                  user={currentUser}
+                  onCompleteCheckout={handleCompleteCheckout}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/order-confirmation"
+            element={
+              <OrderConfirmation order={latestOrder} onBackHome={handleBackHomeAfterOrder} />
+            }
+          />
+          <Route
+            path="/user/profile"
+            element={
+              <ProtectedRoute>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/orders"
+            element={
+              <ProtectedRoute>
+                <UserOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/orders/:orderId"
+            element={
+              <ProtectedRoute>
+                <OrderDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/access-denied" element={<Unauthorized />} />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products"
+            element={
+              <AdminRoute>
+                <AdminProducts />
+              </AdminRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
 
