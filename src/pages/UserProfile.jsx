@@ -96,8 +96,8 @@ function UserProfile() {
           <p className={styles.eyebrow}>Semana 15</p>
           <h1 className={styles.title}>Mi cuenta</h1>
           <p className={styles.subtitle}>
-            Esta vista centraliza la sesión autenticada, permite editar el perfil y agrega un
-            cambio de contraseña controlado desde la cuenta actual.
+            Esta vista centraliza la sesión autenticada, permite editar el perfil y agrega un cambio
+            de contraseña controlado desde la cuenta actual.
           </p>
         </div>
 
