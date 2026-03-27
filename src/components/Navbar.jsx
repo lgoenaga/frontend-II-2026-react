@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 import logo from '../assets/img-logos/logo-Cesde-2023.svg';
 import styles from '../styles/Navbar.module.css';
@@ -6,11 +6,9 @@ import styles from '../styles/Navbar.module.css';
 function Navbar({ user, onSignIn, onSignOut, cartItemCount = 0 }) {
   const userLabel = user?.name ?? 'Invitado';
   const isLoggedIn = Boolean(user);
-  const navigate = useNavigate();
   const location = useLocation();
 
   const isHomeActive = location.pathname === '/' || location.pathname.startsWith('/category/');
-  const isProductsActive = location.pathname === '/products';
   const isCartActive =
     location.pathname === '/cart' ||
     location.pathname === '/checkout' ||
@@ -25,35 +23,25 @@ function Navbar({ user, onSignIn, onSignOut, cartItemCount = 0 }) {
       </div>
 
       <div className={styles.links}>
-        <button
-          type="button"
-          className={`${styles.link} ${isHomeActive ? styles.active : ''}`}
-          onClick={() => navigate('/')}
-        >
+        <NavLink to="/" end className={() => `${styles.link} ${isHomeActive ? styles.active : ''}`}>
           Inicio
-        </button>
-        <button
-          type="button"
-          className={`${styles.link} ${isProductsActive ? styles.active : ''}`}
-          onClick={() => navigate('/products')}
+        </NavLink>
+        <NavLink
+          to="/products"
+          className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
         >
           Productos
-        </button>
-        <button
-          type="button"
-          className={`${styles.link} ${isCartActive ? styles.active : ''}`}
-          onClick={() => navigate('/cart')}
-        >
+        </NavLink>
+        <NavLink to="/cart" className={() => `${styles.link} ${isCartActive ? styles.active : ''}`}>
           Carrito
           {cartItemCount > 0 ? <span className={styles.cartBadge}>{cartItemCount}</span> : null}
-        </button>
-        <button
-          type="button"
-          className={`${styles.link} ${isAccountActive ? styles.active : ''}`}
-          onClick={() => navigate('/user/profile')}
+        </NavLink>
+        <NavLink
+          to="/user/profile"
+          className={() => `${styles.link} ${isAccountActive ? styles.active : ''}`}
         >
           Mi cuenta
-        </button>
+        </NavLink>
       </div>
 
       <div className={styles.auth}>
