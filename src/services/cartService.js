@@ -170,7 +170,7 @@ async function getCartAsync() {
 
 async function addToCartAsync(product, currentItems = getCartItems()) {
   if (!appConfig.useRemoteApi) {
-    return buildLocalCart(addToCart(product, currentItems)).items;
+    return buildLocalCart(addToCart(product, currentItems));
   }
 
   const token = await ensureRemoteCartSession();
@@ -183,12 +183,12 @@ async function addToCartAsync(product, currentItems = getCartItems()) {
     },
   });
 
-  return normalizeCartResponse(response).items;
+  return normalizeCartResponse(response);
 }
 
 async function updateCartItemQuantityAsync(productId, nextQuantity, currentItems = getCartItems()) {
   if (!appConfig.useRemoteApi) {
-    return buildLocalCart(updateCartItemQuantity(productId, nextQuantity, currentItems)).items;
+    return buildLocalCart(updateCartItemQuantity(productId, nextQuantity, currentItems));
   }
 
   const token = await ensureRemoteCartSession();
@@ -200,12 +200,12 @@ async function updateCartItemQuantityAsync(productId, nextQuantity, currentItems
     },
   });
 
-  return normalizeCartResponse(response).items;
+  return normalizeCartResponse(response);
 }
 
 async function removeCartItemAsync(productId, currentItems = getCartItems()) {
   if (!appConfig.useRemoteApi) {
-    return buildLocalCart(removeCartItem(productId, currentItems)).items;
+    return buildLocalCart(removeCartItem(productId, currentItems));
   }
 
   const token = await ensureRemoteCartSession();
@@ -214,7 +214,7 @@ async function removeCartItemAsync(productId, currentItems = getCartItems()) {
     token,
   });
 
-  return normalizeCartResponse(response).items;
+  return normalizeCartResponse(response);
 }
 
 async function clearCartAsync() {
@@ -228,7 +228,7 @@ async function clearCartAsync() {
     token,
   });
 
-  return saveCart({ ...loadCart(), items: [], updatedAt: new Date().toISOString() }).items;
+  return saveCart({ ...loadCart(), items: [], updatedAt: new Date().toISOString() });
 }
 
 async function mergeCartAsync(guestCartId) {

@@ -72,8 +72,8 @@ function CartProvider({ children }) {
     setCartError('');
 
     try {
-      await action();
-      setCart(cartService.getCart());
+      const nextCart = await action();
+      setCart(nextCart ?? cartService.getCart());
     } catch (error) {
       setCartError(
         error instanceof Error && error.message
