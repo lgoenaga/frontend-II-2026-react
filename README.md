@@ -50,7 +50,7 @@ El proyecto crea un usuario administrador por defecto en persistencia local:
 
 ### Modo remoto
 
-Si el backend demo está arriba con el seed actual, el login puede usar:
+Si activas las credenciales demo remotas en tu `.env` local, el login puede mostrar y usar:
 
 - Admin: `admin.demo@pps.com` / `Admin12345*`
 - Customer: `customer.demo@pps.com` / `Customer12345*`
@@ -171,6 +171,12 @@ Variables soportadas:
 - `VITE_API_BASE_URL`
 - `VITE_API_TIMEOUT_MS`
 - `VITE_DEV_PROXY_TARGET`
+- `VITE_SHOW_REMOTE_DEMO_CREDENTIALS`
+- `VITE_REMOTE_DEMO_ADMIN_EMAIL`
+- `VITE_REMOTE_DEMO_ADMIN_PASSWORD`
+- `VITE_REMOTE_DEMO_CUSTOMER_EMAIL`
+- `VITE_REMOTE_DEMO_CUSTOMER_PASSWORD`
+- `VITE_REMOTE_DEMO_GUEST_TOKEN`
 
 Por defecto:
 
@@ -190,8 +196,11 @@ Con esta configuración:
 - `VITE_USE_REMOTE_API=true`
 - `VITE_API_BASE_URL=/api/v1`
 - `VITE_DEV_PROXY_TARGET=http://localhost:8080`
+- `VITE_SHOW_REMOTE_DEMO_CREDENTIALS=true` solo si quieres mostrar accesos demo en la UI
 
 El proxy de Vite redirige `/api/*` al backend local para evitar problemas de origen cruzado durante la demo e integración.
+
+`VITE_*` en Vite no es secreto de servidor: termina embebido en el bundle cliente. Sirve para configuración pública del frontend y para credenciales demo de desarrollo, no para llaves privadas, tokens reales ni secretos de producción.
 
 Para el contrato mínimo de integración, revisar `CONTRATO_API_MINIMO.md`.
 
