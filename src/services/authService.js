@@ -104,7 +104,7 @@ const validateAdminUserPayload = (payload, { isEditing = false, currentUserId = 
     return { ok: false, error: 'El correo electrónico es obligatorio.' };
   }
 
-  const existingUser = findUserByEmail(normalizedPayload.email);
+  const existingUser = appConfig.useRemoteApi ? null : findUserByEmail(normalizedPayload.email);
 
   if (existingUser && String(existingUser.id) !== normalizedCurrentUserId) {
     return { ok: false, error: 'Ya existe un usuario con ese correo electrónico.' };
