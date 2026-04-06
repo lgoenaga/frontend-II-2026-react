@@ -206,8 +206,6 @@ Cuando `VITE_USE_REMOTE_API=true`, el catálogo público y admin debe provenir d
 
 Para minimizar cambios entre frontend y backend, el nombre oficial del campo de imagen del producto debe ser `image`.
 
-Para el contrato mínimo de integración, revisar `CONTRATO_API_MINIMO.md`.
-
 Para la referencia operativa actualizada de endpoints backend, revisar `BACKEND_ENDPOINTS_REFRENCE.md`.
 
 ## Estructura principal
@@ -268,7 +266,6 @@ src/
 
 ## Documentación complementaria
 
-- `CONTRATO_API_MINIMO.md`: contrato de datos y endpoints mínimos para backend.
 - `BACKEND_ENDPOINTS_REFRENCE.md`: referencia operativa del backend disponible.
 
 ## Notas
