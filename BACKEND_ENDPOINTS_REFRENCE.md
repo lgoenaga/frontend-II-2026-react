@@ -61,6 +61,7 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
 - `expiresAt`
 - `user = null`
 - `cart` guest inicial
+- el objeto `cart` sigue el mismo contrato de la sección `# 5. Cart`, incluyendo `items[*].image`
 
 ---
 
@@ -76,6 +77,7 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
 - `expiresAt`
 - `user`
 - `cart`
+- el objeto `cart` sigue el mismo contrato de la sección `# 5. Cart`, incluyendo `items[*].image`
 
 ### Body
 ```json
@@ -107,6 +109,7 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
 - `expiresAt`
 - `user`
 - `cart`
+- el objeto `cart` sigue el mismo contrato de la sección `# 5. Cart`, incluyendo `items[*].image`
 
 ### Body
 ```json
@@ -305,6 +308,7 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
 - si `search` viene informado, se filtra por nombre
 - si `categoryId` viene informado, se filtra por categoría
 - `activeOnly=true` excluye productos inactivos
+- `image` representa la URL pública de la imagen principal del producto y puede venir en `null` si el producto no la tiene cargada
 
 ## 3.2 Obtener producto por ID
 - **GET** `/api/v1/products/{id}`
@@ -320,8 +324,8 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
   "categoryName": "Perifericos",
   "sku": "MOU-001",
   "name": "Mouse Gamer",
-  "image": "https://cdn.mi-backend.com/products/mouse-gamer.jpg",
   "description": "Mouse Gamer descripcion de prueba",
+  "image": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&w=1200&q=80",
   "price": 89.90,
   "stockQty": 20,
   "isActive": true,
@@ -329,11 +333,6 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
   "createdAt": "2026-04-05T14:30:00"
 }
 ```
-
-### Regla de contrato
-- el backend debe exponer la imagen pública del producto en el campo `image`
-- `image` es el nombre canónico del contrato para frontend
-- `imageUrl` no debe ser el nombre oficial del campo en la API
 
 ---
 
@@ -474,6 +473,9 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
 - si el merge supera el stock disponible: `409 INSUFFICIENT_STOCK`
 
 ### Shape de carrito
+- cada item expone `image` con la imagen principal actual del producto relacionado
+- `image` puede venir en `null` si el producto no tiene imagen cargada
+
 ```json
 {
   "id": 22,
@@ -489,6 +491,7 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
       "productId": 101,
       "sku": "MOU-001",
       "name": "Mouse Gamer",
+      "image": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&w=1200&q=80",
       "quantity": 2,
       "unitPrice": 89.90,
       "lineTotal": 179.80,
@@ -531,6 +534,10 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
 - **GET** `/api/v1/orders/{id}`
 - **Auth requerida:** sí
 - **Response:** `200 OK`
+
+### Regla de items de orden
+- cada item expone `image` con la imagen principal actual del producto relacionado
+- `image` puede venir en `null` si el producto no tiene imagen cargada
 
 ### Body checkout
 ```json
@@ -579,7 +586,8 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
       "id": 1,
       "productId": 101,
       "sku": "MOU-001",
-      "name": "Mouse Gamer",
+      "productName": "Mouse Gamer",
+      "image": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&w=1200&q=80",
       "quantity": 2,
       "unitPrice": 89.90,
       "lineTotal": 179.80
@@ -631,13 +639,17 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
   "categoryId": 1,
   "sku": "MOU-001",
   "name": "Mouse Gamer",
-  "image": "https://cdn.mi-backend.com/products/mouse-gamer.jpg",
   "description": "Mouse Gamer descripcion de prueba",
+  "image": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&w=1200&q=80",
   "price": 89.90,
   "stockQty": 20,
   "isActive": true
 }
 ```
+
+### Reglas crear/actualizar producto
+- `image` es opcional
+- cuando se informa `image`, el backend la persiste y la devuelve en `POST`, `PUT`, `GET /api/v1/products` y `GET /api/v1/products/{id}`
 
 ---
 
