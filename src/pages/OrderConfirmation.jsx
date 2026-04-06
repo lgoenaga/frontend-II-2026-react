@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import OptionalImage from '../components/OptionalImage';
 import { appConfig } from '../config';
 import styles from '../styles/OrderConfirmation.module.css';
 import { formatCOP } from '../utils/formatCOP';
@@ -130,7 +131,7 @@ function OrderConfirmation({ order, onBackHome }) {
             <div className={styles.itemList}>
               {order.items.map((item) => (
                 <article key={item.id} className={styles.item}>
-                  <img className={styles.itemImage} src={item.image} alt={item.name} />
+                  <OptionalImage className={styles.itemImage} src={item.image} alt={item.name} />
                   <div className={styles.itemContent}>
                     <h3 className={styles.itemName}>{item.name}</h3>
                     <p className={styles.itemMeta}>

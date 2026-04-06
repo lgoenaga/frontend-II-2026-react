@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import OptionalImage from '../components/OptionalImage';
 import useAuth from '../hooks/useAuth';
 import orderService from '../services/orderService';
 import styles from '../styles/OrderDetail.module.css';
@@ -238,7 +239,7 @@ function OrderDetail() {
         <div className={styles.itemList}>
           {order.items.map((item) => (
             <article key={`${order.id}-${item.id}`} className={styles.item}>
-              <img className={styles.itemImage} src={item.image} alt={item.name} />
+              <OptionalImage className={styles.itemImage} src={item.image} alt={item.name} />
               <div className={styles.itemContent}>
                 <h3 className={styles.itemName}>{item.name}</h3>
                 <p className={styles.itemMeta}>Categoria: {item.category}</p>
