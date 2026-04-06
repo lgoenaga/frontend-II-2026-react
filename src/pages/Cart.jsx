@@ -83,7 +83,9 @@ function Cart() {
                       <button
                         type="button"
                         className={styles.btnQuantity}
-                        onClick={() => updateCartItemQuantity(item.id, item.quantity - 1)}
+                        onClick={() =>
+                          updateCartItemQuantity(item.productId ?? item.id, item.quantity - 1)
+                        }
                         disabled={item.quantity <= 1}
                       >
                         -
@@ -92,7 +94,9 @@ function Cart() {
                       <button
                         type="button"
                         className={styles.btnQuantity}
-                        onClick={() => updateCartItemQuantity(item.id, item.quantity + 1)}
+                        onClick={() =>
+                          updateCartItemQuantity(item.productId ?? item.id, item.quantity + 1)
+                        }
                         disabled={item.quantity >= (item.stockQty ?? item.stock)}
                       >
                         +
@@ -102,7 +106,7 @@ function Cart() {
                     <button
                       type="button"
                       className={styles.btnRemove}
-                      onClick={() => removeCartItem(item.id)}
+                      onClick={() => removeCartItem(item.productId ?? item.id)}
                     >
                       Eliminar
                     </button>
