@@ -7,18 +7,6 @@ import cartService from '../services/cartService';
 import styles from '../styles/AuthPage.module.css';
 import { DEFAULT_ADMIN_USER } from '../utils/authStorage';
 
-const REMOTE_DEMO_CREDENTIALS = {
-  admin: {
-    email: 'admin.demo@pps.com',
-    password: 'Admin12345*',
-  },
-  customer: {
-    email: 'customer.demo@pps.com',
-    password: 'Customer12345*',
-  },
-  guestToken: 'demo-guest-session-token',
-};
-
 const fillDemoCredentials = (setValues, credentials) => {
   setValues({
     email: credentials.email,
@@ -33,6 +21,14 @@ function Login() {
   const location = useLocation();
   const navigate = useNavigate();
   const isRemoteMode = appConfig.useRemoteApi;
+  const remoteDemoCredentials = appConfig.remoteDemoCredentials;
+  const shouldShowRemoteDemoCredentials =
+    isRemoteMode &&
+    appConfig.showRemoteDemoCredentials &&
+    remoteDemoCredentials.admin.email &&
+    remoteDemoCredentials.admin.password &&
+    remoteDemoCredentials.customer.email &&
+    remoteDemoCredentials.customer.password;
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -73,28 +69,32 @@ function Login() {
 
         <div className={styles.infoBox}>
           <strong>
-            {isRemoteMode ? 'Credenciales seed demo backend' : 'Credenciales demo locales'}
+            {shouldShowRemoteDemoCredentials
+              ? 'Credenciales seed demo backend'
+              : 'Credenciales demo locales'}
           </strong>
           <div className={styles.credentialsList}>
-            {isRemoteMode ? (
+            {shouldShowRemoteDemoCredentials ? (
               <>
                 <span className={styles.credentialRow}>
-                  Admin: {REMOTE_DEMO_CREDENTIALS.admin.email} /{' '}
-                  {REMOTE_DEMO_CREDENTIALS.admin.password}
+                  Admin: {remoteDemoCredentials.admin.email} /{' '}
+                  {remoteDemoCredentials.admin.password}
                 </span>
                 <span className={styles.credentialRow}>
-                  Customer: {REMOTE_DEMO_CREDENTIALS.customer.email} /{' '}
-                  {REMOTE_DEMO_CREDENTIALS.customer.password}
+                  Customer: {remoteDemoCredentials.customer.email} /{' '}
+                  {remoteDemoCredentials.customer.password}
                 </span>
-                <span className={styles.credentialRow}>
-                  Guest token demo: {REMOTE_DEMO_CREDENTIALS.guestToken}
-                </span>
+                {remoteDemoCredentials.guestToken ? (
+                  <span className={styles.credentialRow}>
+                    Guest token demo: {remoteDemoCredentials.guestToken}
+                  </span>
+                ) : null}
                 <div className={styles.demoActions}>
                   <button
                     type="button"
                     className={styles.demoActionButton}
                     disabled={isSubmittingAuth}
-                    onClick={() => fillDemoCredentials(setValues, REMOTE_DEMO_CREDENTIALS.customer)}
+                    onClick={() => fillDemoCredentials(setValues, remoteDemoCredentials.customer)}
                   >
                     Usar customer demo
                   </button>
@@ -102,7 +102,7 @@ function Login() {
                     type="button"
                     className={styles.demoActionButton}
                     disabled={isSubmittingAuth}
-                    onClick={() => fillDemoCredentials(setValues, REMOTE_DEMO_CREDENTIALS.admin)}
+                    onClick={() => fillDemoCredentials(setValues, remoteDemoCredentials.admin)}
                   >
                     Usar admin demo
                   </button>
