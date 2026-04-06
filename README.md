@@ -204,6 +204,8 @@ El proxy de Vite redirige `/api/*` al backend local para evitar problemas de ori
 
 Cuando `VITE_USE_REMOTE_API=true`, el catálogo público y admin debe provenir del backend como fuente única. El frontend ya no debe completar imágenes o descripciones de productos usando el seed local; si el backend no devuelve esos campos, el contrato debe ajustarse en la API.
 
+En ese mismo modo remoto, las direcciones del usuario y el carrito también deben refrescarse desde la API como fuente de verdad. `localStorage` solo debe conservar una copia técnica de la última respuesta válida para mantener la experiencia del frontend, no completar ni reintroducir datos que ya no existan en backend.
+
 Para minimizar cambios entre frontend y backend, el nombre oficial del campo de imagen del producto debe ser `image`.
 
 Para la referencia operativa actualizada de endpoints backend, revisar `BACKEND_ENDPOINTS_REFRENCE.md`.
