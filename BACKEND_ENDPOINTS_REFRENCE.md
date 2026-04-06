@@ -320,6 +320,7 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
   "categoryName": "Perifericos",
   "sku": "MOU-001",
   "name": "Mouse Gamer",
+  "image": "https://cdn.mi-backend.com/products/mouse-gamer.jpg",
   "description": "Mouse Gamer descripcion de prueba",
   "price": 89.90,
   "stockQty": 20,
@@ -328,6 +329,11 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
   "createdAt": "2026-04-05T14:30:00"
 }
 ```
+
+### Regla de contrato
+- el backend debe exponer la imagen pública del producto en el campo `image`
+- `image` es el nombre canónico del contrato para frontend
+- `imageUrl` no debe ser el nombre oficial del campo en la API
 
 ---
 
@@ -625,6 +631,7 @@ Está pensado para el equipo de frontend y QA como referencia rápida del backen
   "categoryId": 1,
   "sku": "MOU-001",
   "name": "Mouse Gamer",
+  "image": "https://cdn.mi-backend.com/products/mouse-gamer.jpg",
   "description": "Mouse Gamer descripcion de prueba",
   "price": 89.90,
   "stockQty": 20,

@@ -202,6 +202,10 @@ El proxy de Vite redirige `/api/*` al backend local para evitar problemas de ori
 
 `VITE_*` en Vite no es secreto de servidor: termina embebido en el bundle cliente. Sirve para configuración pública del frontend y para credenciales demo de desarrollo, no para llaves privadas, tokens reales ni secretos de producción.
 
+Cuando `VITE_USE_REMOTE_API=true`, el catálogo público y admin debe provenir del backend como fuente única. El frontend ya no debe completar imágenes o descripciones de productos usando el seed local; si el backend no devuelve esos campos, el contrato debe ajustarse en la API.
+
+Para minimizar cambios entre frontend y backend, el nombre oficial del campo de imagen del producto debe ser `image`.
+
 Para el contrato mínimo de integración, revisar `CONTRATO_API_MINIMO.md`.
 
 Para la referencia operativa actualizada de endpoints backend, revisar `BACKEND_ENDPOINTS_REFRENCE.md`.

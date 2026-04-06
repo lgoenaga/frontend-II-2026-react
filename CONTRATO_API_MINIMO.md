@@ -78,6 +78,7 @@ Reglas:
 2. `stock` es entero mayor o igual a 0.
 3. `rating` es opcional si backend no lo gestiona en la primera fase.
 4. `createdAt` y `updatedAt` son recomendados desde el inicio.
+5. La imagen pública del producto debe exponerse en el campo `image`; no se recomienda publicar `imageUrl` como nombre oficial del contrato.
 
 ### Order
 
