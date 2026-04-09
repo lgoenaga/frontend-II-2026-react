@@ -118,6 +118,7 @@ function OrderDetail() {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+  const hasCartId = Boolean(String(order.cartId ?? '').trim());
   const shippingAddressLines = formatAddressLines(order.shippingAddress);
   const billingAddressLines = formatAddressLines(order.billingAddress);
 
@@ -163,10 +164,12 @@ function OrderDetail() {
           <span className={styles.label}>Estado</span>
           <strong>{order.status}</strong>
         </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.label}>Cart ID</span>
-          <strong>{order.cartId || 'Sin cartId'}</strong>
-        </div>
+        {hasCartId ? (
+          <div className={styles.summaryCard}>
+            <span className={styles.label}>Cart ID</span>
+            <strong>{order.cartId}</strong>
+          </div>
+        ) : null}
       </div>
 
       <div className={styles.layout}>

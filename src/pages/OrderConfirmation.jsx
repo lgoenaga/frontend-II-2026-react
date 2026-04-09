@@ -51,6 +51,7 @@ function OrderConfirmation({ order, onBackHome }) {
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+  const hasCartId = Boolean(String(order.cartId ?? '').trim());
   const shippingAddressLines = formatAddressLines(order.shippingAddress);
   const billingAddressLines = formatAddressLines(order.billingAddress);
 
@@ -78,10 +79,12 @@ function OrderConfirmation({ order, onBackHome }) {
             <span className={styles.metaLabel}>Estado</span>
             <strong className={styles.metaValue}>{order.status}</strong>
           </div>
-          <div className={styles.metaCard}>
-            <span className={styles.metaLabel}>Cart ID</span>
-            <strong className={styles.metaValue}>{order.cartId || 'Sin cartId'}</strong>
-          </div>
+          {hasCartId ? (
+            <div className={styles.metaCard}>
+              <span className={styles.metaLabel}>Cart ID</span>
+              <strong className={styles.metaValue}>{order.cartId}</strong>
+            </div>
+          ) : null}
         </div>
 
         <div className={styles.layout}>
