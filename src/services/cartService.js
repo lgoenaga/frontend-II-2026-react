@@ -4,6 +4,10 @@ import { loadCart, saveCart, saveCartItems } from '../utils/cartStorage';
 
 import { requestJson } from './http';
 
+let pendingGuestSessionPromise = null;
+
+const REMOTE_CART_ID_PATTERN = /^\d+$/;
+
 const normalizeProductStock = (product) => {
   const parsedStock = Number(product?.productStock ?? product?.stockQty ?? product?.stock);
   return Number.isFinite(parsedStock) && parsedStock >= 0 ? parsedStock : 0;
@@ -15,6 +19,22 @@ const normalizeCartResponse = (payload) =>
     updatedAt: payload?.updatedAt ?? new Date().toISOString(),
   });
 
+const getGuestCartIdForAuth = (cart = loadCart()) => {
+  const normalizedCartId = String(cart?.id ?? '').trim();
+  const normalizedUserId = String(cart?.userId ?? '').trim();
+
+  if (
+    !normalizedCartId ||
+    normalizedUserId ||
+    cart?.isGuest === false ||
+    !REMOTE_CART_ID_PATTERN.test(normalizedCartId)
+  ) {
+    return '';
+  }
+
+  return normalizedCartId;
+};
+
 const ensureRemoteCartSession = async () => {
   const currentToken = loadSessionToken();
 
@@ -22,22 +42,33 @@ const ensureRemoteCartSession = async () => {
     return currentToken;
   }
 
-  const response = await requestJson('/auth/guest-session', {
+  if (pendingGuestSessionPromise) {
+    return pendingGuestSessionPromise;
+  }
+
+  pendingGuestSessionPromise = requestJson('/auth/guest-session', {
     method: 'POST',
-  });
-  const nextToken = String(response?.sessionToken ?? response?.token ?? '').trim();
+  })
+    .then((response) => {
+      const nextToken = String(response?.sessionToken ?? response?.token ?? '').trim();
 
-  if (!nextToken) {
-    throw new Error('No fue posible inicializar la sesión invitada del carrito.');
-  }
+      if (!nextToken) {
+        throw new Error('No fue posible inicializar la sesión invitada del carrito.');
+      }
 
-  saveSessionToken(nextToken);
+      saveSessionToken(nextToken);
 
-  if (response?.cart) {
-    normalizeCartResponse(response.cart);
-  }
+      if (response?.cart) {
+        normalizeCartResponse(response.cart);
+      }
 
-  return nextToken;
+      return nextToken;
+    })
+    .finally(() => {
+      pendingGuestSessionPromise = null;
+    });
+
+  return pendingGuestSessionPromise;
 };
 
 const buildLocalCart = (items, currentCart = loadCart()) =>
@@ -259,6 +290,7 @@ const cartService = {
   getCartAsync,
   getCartItemCount,
   getCartItems,
+  getGuestCartIdForAuth,
   mergeCartAsync,
   persistCartItems,
   removeCartItem,

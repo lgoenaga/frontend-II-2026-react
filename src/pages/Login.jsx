@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { appConfig } from '../config';
 import useAuth from '../hooks/useAuth';
+import useCart from '../hooks/useCart';
 import cartService from '../services/cartService';
 import styles from '../styles/AuthPage.module.css';
 import { DEFAULT_ADMIN_USER } from '../utils/authStorage';
@@ -18,6 +19,7 @@ function Login() {
   const [values, setValues] = useState({ email: '', password: '' });
   const [formError, setFormError] = useState('');
   const { authError, clearAuthError, isSubmittingAuth, login } = useAuth();
+  const { cart, cartError, cartHydrationStatus, isCartReady } = useCart();
   const location = useLocation();
   const navigate = useNavigate();
   const isRemoteMode = appConfig.useRemoteApi;
@@ -40,7 +42,21 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const guestCartId = String(cartService.getCart()?.id ?? '').trim();
+    if (isRemoteMode && !isCartReady) {
+      setFormError(
+        cartHydrationStatus === 'error'
+          ? cartError || 'No fue posible preparar el carrito para iniciar sesión.'
+          : 'Preparando el carrito antes de iniciar sesión.'
+      );
+      return;
+    }
+
+    const guestCartId = cartService.getGuestCartIdForAuth(cart);
+
+    if (isRemoteMode && !guestCartId) {
+      setFormError('No fue posible preparar un carrito invitado válido para iniciar sesión.');
+      return;
+    }
 
     const result = await login({
       email: values.email.trim(),
@@ -56,6 +72,14 @@ function Login() {
     const nextPath = location.state?.from || '/user/profile';
     navigate(nextPath, { replace: true });
   };
+
+  const submitDisabled = isSubmittingAuth || (isRemoteMode && !isCartReady);
+  const blockedMessage =
+    isRemoteMode && !isCartReady
+      ? cartHydrationStatus === 'error'
+        ? cartError || 'No fue posible preparar el carrito para iniciar sesión.'
+        : 'Preparando carrito para conservar tus productos antes de autenticarte...'
+      : '';
 
   return (
     <section className={styles.container}>
@@ -93,7 +117,7 @@ function Login() {
                   <button
                     type="button"
                     className={styles.demoActionButton}
-                    disabled={isSubmittingAuth}
+                    disabled={submitDisabled}
                     onClick={() => fillDemoCredentials(setValues, remoteDemoCredentials.customer)}
                   >
                     Usar customer demo
@@ -101,7 +125,7 @@ function Login() {
                   <button
                     type="button"
                     className={styles.demoActionButton}
-                    disabled={isSubmittingAuth}
+                    disabled={submitDisabled}
                     onClick={() => fillDemoCredentials(setValues, remoteDemoCredentials.admin)}
                   >
                     Usar admin demo
@@ -124,7 +148,7 @@ function Login() {
             <span className={styles.label}>Correo electrónico</span>
             <input
               className={styles.input}
-              disabled={isSubmittingAuth}
+              disabled={submitDisabled}
               name="email"
               value={values.email}
               onChange={handleChange}
@@ -137,7 +161,7 @@ function Login() {
             <span className={styles.label}>Contraseña</span>
             <input
               className={styles.input}
-              disabled={isSubmittingAuth}
+              disabled={submitDisabled}
               name="password"
               value={values.password}
               onChange={handleChange}
@@ -146,9 +170,11 @@ function Login() {
             />
           </label>
 
-          {formError || authError ? <p className={styles.error}>{formError || authError}</p> : null}
+          {formError || authError || blockedMessage ? (
+            <p className={styles.error}>{formError || authError || blockedMessage}</p>
+          ) : null}
 
-          <button type="submit" className={styles.primaryButton} disabled={isSubmittingAuth}>
+          <button type="submit" className={styles.primaryButton} disabled={submitDisabled}>
             {isSubmittingAuth ? 'Ingresando...' : 'Ingresar'}
           </button>
         </form>
