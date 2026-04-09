@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 
-import OptionalImage from './OptionalImage';
 import styles from '../styles/ProductDetailsModal.module.css';
 import { formatCOP } from '../utils/formatCOP';
+
+import OptionalImage from './OptionalImage';
 
 function ProductDetailsModal({ isOpen, product, onClose }) {
   useEffect(() => {

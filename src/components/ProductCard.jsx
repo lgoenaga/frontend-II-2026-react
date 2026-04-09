@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
-import OptionalImage from './OptionalImage';
 import styles from '../styles/ProductCard.module.css';
 import { formatCOP } from '../utils/formatCOP';
+
+import OptionalImage from './OptionalImage';
 
 function ProductCard({
   id,
