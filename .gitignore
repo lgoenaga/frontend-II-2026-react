@@ -27,5 +27,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Local handoff and integration notes
-ETAPA14_HANDOFF_FRONTEND_DEMO.md
+# Documentación personal
+docs
+documents
